@@ -1,18 +1,12 @@
-import { GoodDataType } from "@/types/good-type";
 import style from "@/app/good/[id]/page.module.css";
+import { GoodDataType } from "@/types/types/good-type";
 import Image from "next/image";
-import { url } from "inspector";
+import { notFound } from "next/navigation";
 
-const mockData: GoodDataType = {
-  id: 1,
-  title: "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
-  price: 109.95,
-  description:
-    "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
-  category: "men's clothing",
-  image: "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
-  rating: { rate: 3.9, count: 120 },
-};
+// 특정한 페이지를 static page로 생성
+export function generateStaticParams() {
+  return [{ id: "1" }, { id: "2" }, { id: "3" }, { id: "4" }];
+}
 
 export default async function Page({
   params,
@@ -20,14 +14,32 @@ export default async function Page({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  console.log(id);
-  const { title, category, description, image, rating } = mockData;
+  // console.log(id);
+
+  let good: GoodDataType | null = null;
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/products/${id}`,
+      { cache: "force-cache" }
+    );
+    good = await res.json();
+    // console.log(good);
+  } catch (error) {
+    console.log(error);
+  }
+
+  if (!good) {
+    notFound(); // 페이지가 없을 때 404로 이동
+  }
+
+  const { title, image, category, rating, description } = good;
 
   return (
     <div className={style.container}>
-      <h2 className={style.title}>title</h2>
-      <div style={{ backgroundImage: `url(${image})` }}>
-        <Image src={image} alt={title} width={245} height={350} />
+      <div className={style.title}>{title}</div>
+      <div className={style.image} style={{ backgroundImage: `url(${image})` }}>
+        <Image src={image} width={245} height={350} alt={title} />
       </div>
       <div className={style.category}>{category}</div>
       <div className={style.rating}>

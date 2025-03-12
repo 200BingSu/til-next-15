@@ -1,6 +1,5 @@
-import { ReactNode } from "react";
 import SearchBar from "@/components/searchbar";
-import ServerTest from "@/components/ServerTest";
+import { ReactNode } from "react";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (

@@ -1,0 +1,25 @@
+import { GoodDataType } from "@/types/types/good-type";
+import GoodItem from "./good-item";
+
+export async function AllGoods() {
+  let allGoods: GoodDataType[] = [];
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/products?limit=10`,
+      {
+        cache: "force-cache",
+      }
+    );
+    allGoods = await res.json();
+    console.log(allGoods);
+  } catch (error) {
+    console.log(error);
+  }
+  return (
+    <>
+      {allGoods.map((good) => (
+        <GoodItem key={good.id} {...good} />
+      ))}
+    </>
+  );
+}
