@@ -5,10 +5,7 @@ export async function AllGoods() {
   let allGoods: GoodDataType[] = [];
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/products?limit=10`,
-      {
-        cache: "force-cache",
-      }
+      `${process.env.NEXT_PUBLIC_API_URL}/products?limit=10`
     );
     allGoods = await res.json();
     console.log(allGoods);

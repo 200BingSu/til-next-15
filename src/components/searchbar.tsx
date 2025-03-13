@@ -1,18 +1,21 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { ChangeEvent, KeyboardEvent, useState } from "react";
 import styles from "@/components/searchbar.module.css";
+import { useRouter } from "next/navigation";
+import { ChangeEvent, KeyboardEvent, useEffect, useState } from "react";
 
 const SearchBar = () => {
-  console.log("클라이언트 컴포넌트");
+  // console.log("클라이언트 컴포넌트");
   const [search, setSearch] = useState("");
+  useEffect(() => {
+    console.log("search", search);
+  }, [search]);
   const onChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
   // 동적 라우팅
   const router = useRouter(); // next-15는 next/navigation으로 import 해야함
   const handleSearch = () => {
-    if (search) {
+    if (!search) {
       return;
     }
     router.push(`/search?keyword=${search}`);
@@ -23,7 +26,7 @@ const SearchBar = () => {
     }
   };
   return (
-    <div className={styles.continer}>
+    <div className={styles.container}>
       <input
         type="text"
         value={search}
