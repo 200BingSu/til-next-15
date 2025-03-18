@@ -5,6 +5,33 @@ import { GoodDataType } from "@/types/types/good-type";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
+// SEO
+export const generateMetadata = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
+  const { id } = await params;
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/products/${id}`
+    );
+    const good: GoodDataType = await res.json();
+    const { title, description, image } = good;
+    return {
+      title: `상품 ${title} 상세 페이지`,
+      description: `상품 ${description} 상세 페이지입니다.`,
+      openGraph: {
+        title: `상품 ${title} 상세 페이지`,
+        description: `상품 ${description} 상세 페이지입니다.`,
+        images: [{ url: image }],
+      },
+    };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // 특정한 페이지를 Static Page 로 생성
 export function generateStaticParams() {
   return [{ id: "1" }, { id: "2" }, { id: "3" }, { id: "4" }];

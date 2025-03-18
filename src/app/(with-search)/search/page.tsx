@@ -1,6 +1,7 @@
 import style from "@/app/(with-search)/search/page.module.css";
 import GoodItem from "@/components/good-item";
 import { GoodDataType } from "@/types/types/good-type";
+import { Metadata } from "next";
 import { Suspense } from "react";
 
 async function SearchResult({ keyword }: { keyword: string }) {
@@ -22,6 +23,33 @@ async function SearchResult({ keyword }: { keyword: string }) {
 
 // 강제로 Dynamic으로 변경하는 방안
 export const dynamic = "force-dynamic";
+
+// SEO 적용
+// export const metaData: Metadata = {
+//   title: "상품 검색 페이지",
+//   description: "상품 검색 페이지입니다.",
+//   openGraph: {
+//     title: "상품 검색 페이지",
+//     description: "상품 검색 페이지입니다.",
+//     images: [{ url: "/thumbnail.png" }],
+//   },
+// };
+export const generateMetaData = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ keyword: string }>;
+}) => {
+  const { keyword } = await searchParams;
+  return {
+    title: `상품 ${keyword} 검색 페이지`,
+    description: `상품 ${keyword} 검색 페이지입니다`,
+    openGraph: {
+      title: `상품 ${keyword} 검색 페이지`,
+      description: `상품 ${keyword} 검색 페이지입니다`,
+      images: [{ url: "/thumbnail.png" }],
+    },
+  };
+};
 
 export default async function Page({
   searchParams,
